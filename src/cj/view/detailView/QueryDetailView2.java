@@ -40,16 +40,17 @@ public class QueryDetailView2 implements operation {
         	}
         	if(zhuangtai2.equals(flag)) {
         		System.out.println("请选择接下来的操作:");
-                System.out.println("1.新建成绩单详情	2.删除成绩单详情	3.修改成绩单详情	"
-                		+ "4.导出详情到文件	5.换个科目	0.返回上一级菜单");
-      			int caozuo = scan.nextInt();
-      			if(1==caozuo)
-      				return "新建成绩单详情";
-      			else if(2==caozuo)
-      				return "删除成绩单详情";
-      			else if(3==caozuo)
-      				return "修改成绩单详情";
-      			else if(4==caozuo)
+                //System.out.println("1.新建成绩单详情	2.删除成绩单详情	3.修改成绩单详情	4.导出详情到文件	5.换个科目	0.返回上一级菜单");
+                System.out.println("4.导出详情到文件	5.换个科目	0.返回上一级菜单");
+                int caozuo = scan.nextInt();
+//      			if(1==caozuo)
+//      				return "新建成绩单详情";
+//      			else if(2==caozuo)
+//      				return "删除成绩单详情";
+//      			else if(3==caozuo)
+//      				return "修改成绩单详情";
+//      			else 
+                if(4==caozuo)
       				return "导出详情到文件";
       			else if(5==caozuo) {
       				flag=zhuangtai1;
@@ -57,7 +58,7 @@ public class QueryDetailView2 implements operation {
       			}else if(0==caozuo)
       				return "查询成绩单详情主界面";
       			else
-      				System.out.println("输入有误,请重新输入1-5或者0");
+      				System.out.println("输入有误,请重新输入4,5或者0");
         	}
         }
     }
@@ -80,6 +81,7 @@ public class QueryDetailView2 implements operation {
 			//设定输出格式
 	        DecimalFormat df = new DecimalFormat("0.00");
 	        SimpleDateFormat sdf=new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+	        if(cjDetailList!=null&&cjDetailList.size()!=0) {
 	        //取得总分,平均分,成绩单名称等信息;
 	        ChengJi cj = cjDetailList.get(0).getChengJi();
 	    	//输出标题title
@@ -97,6 +99,15 @@ public class QueryDetailView2 implements operation {
 	        }
 	        //输出成绩单,输出总平均分的正文
 	        sb.append("---总平均分: "+df.format(allScore/(double)cjDetailList.size())+"--------------");
+	        }else {
+	        	//输出标题title
+		        sb.append("-------------\t科目为:[]\t的成绩单详情---------------------\r\n");                   
+		        sb.append("|	id	|	所属成绩单	|	分数	|	创建时间	|\r\n");                    
+		        sb.append("-------------------------------------------------------------------\r\n");
+		        //输出成绩单,输出总平均分的正文
+		        sb.append("---总平均分: []--------------");
+		        
+	        }
 	        return sb.toString();
 	    }
     

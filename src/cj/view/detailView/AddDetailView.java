@@ -82,8 +82,9 @@ public class AddDetailView implements operation {
 			System.out.println("输入的kemu不可以小于2个字符");
 			return false;
 		}else {
+			cj.setKemu(kemu);
         //根据kemu查询这个成绩单在数据库里面是否已经有了
-        cjList=chengJiDetailService.queryChengJiDetailByKemu(kemu);
+        cjList=chengJiDetailService.queryChengJiDetailByKemu(cj);
         if(cjList==null||cjList.size()==0) {
         	return true;
         }else {

@@ -84,6 +84,35 @@ public class ChengJiDetailService {
         return cj;
     }
     
+    // 根据id查询成绩单详情信息 
+    public ChengJiDetail queryOneChengJiDetailByID(int id){
+        String sql =" select d.id ,d.kemu,d.score ,c.total, c.average ,c.name,d.time  " + 
+        			" from   t_ChengJi_detail d " + 
+        			" inner join t_ChengJi c " + 
+        			" on c.id = d.chengji_id " + 
+        			" where d.id = ? order by d.time ";
+        ResultSet rs = db.executeQueryByParam(sql,id);
+        ChengJiDetail cjd = new ChengJiDetail();
+        try {
+        	if(rs.next()){
+            	cjd.setId(rs.getInt("id"));
+            	cjd.setKemu(rs.getString("kemu"));
+            	cjd.setScore(rs.getInt("score"));
+            	cjd.setTime(rs.getDate("time"));
+                ChengJi cj = new ChengJi();
+                cj.setName(rs.getString("name"));
+                cj.setTotal(rs.getDouble("total"));
+                cj.setAverage(rs.getDouble("average"));
+                cjd.setChengJi(cj);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            db.close();
+        }
+        return cjd;
+    }
+    
     //得到成绩单详情信息
     private List<ChengJiDetail> getList(ResultSet rs) throws SQLException{
     	List<ChengJiDetail> cjDetailList = new ArrayList<ChengJiDetail>();

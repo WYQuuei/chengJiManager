@@ -13,6 +13,7 @@ public class ModifyDetailView implements operation{
 	final static String zhuangtai1="准备输入id";
 	final static String zhuangtai2="准备输入kemu";
 	final static String zhuangtai3="准备输入score";
+	final static String zhuangtai4="准备更新成绩详情";
 	String flag = zhuangtai1;
 	List<ChengJiDetail> cjdList= null;
 	ChengJiDetail cjd = new ChengJiDetail();
@@ -31,8 +32,8 @@ public class ModifyDetailView implements operation{
         		int id = scan.nextInt();
         		if (id==0) 
         			return "根据id查询成绩单详情";
-        		cjd.setId(id);
-        		flag=zhuangtai2;
+        		else if(checkId(id))
+            		flag=zhuangtai2;
         	}
     		//修改kemu属性
         	if(zhuangtai2.equals(flag)) {
@@ -40,9 +41,9 @@ public class ModifyDetailView implements operation{
             	String kemu = scan.next();
             	if ("0".equals(kemu))
             		return "根据id查询成绩单详情";
-            	if("9".equals(kemu)) {
+            	else if("9".equals(kemu))
             		flag=zhuangtai3;
-            	}else {
+            	else {
             		if (checkKemu(kemu)) {
                 		//更新 kemu
                 		cjd.setKemu(kemu);
@@ -57,12 +58,18 @@ public class ModifyDetailView implements operation{
             	int score = scan.nextInt();
             	if (0==score)
             		return "根据id查询成绩单详情";
-            	if (checkScore(score))
+            	else if("9".equals(score))
+            		flag = zhuangtai4;
+            	else if (checkScore(score)) {
                 	//更新 score
                 	cjd.setScore(score);
-            	else
+                	flag = zhuangtai4;
+            	}else
             		continue;
-            	
+        	}
+        	
+            //执行service的sql
+            if(zhuangtai4.equals(flag)) {
             	boolean rs=chengJiDetailService.updateChengJiDetail(cjd);
             	if(rs) {
             		System.out.println("修改成功~~~~~~(^ω^)~~~~~~");
@@ -77,6 +84,23 @@ public class ModifyDetailView implements operation{
         }
     }
 
+    //规范id的输入
+  	public boolean checkId(int id) {
+  		ChengJiDetail cjdTemp = null;
+        //根据id查询这个成绩单在数据库的信息
+  		cjdTemp=chengJiDetailService.queryOneChengJiDetailByID(id);
+          if(cjdTemp==null) {
+        	System.out.println("id为"+id+"的成绩详情不存在");
+          	return false;
+          }else {
+        	  //如果存在这个id的[成绩详情]信息,放入默认科目分数等信息
+        	  cjd.setId(id);
+          	  cjd.setKemu(cjdTemp.getKemu());
+          	  cjd.setScore(cjdTemp.getScore());
+          	return true;
+          }
+  	}
+  	
     //规范科目的输入
 	public boolean checkKemu(String kemu) {
 		if(kemu.isEmpty()) {
